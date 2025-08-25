@@ -1,0 +1,20 @@
+1. Purpose of the 'Applied Steps' pane: Records each transformation applied to the data and allows
+ editing/removal of steps.
+ 2. Remove duplicate rows: Home → Remove Rows → Remove Duplicates.
+ 3. Function of the 'Filter' icon: Filters table rows based on column values.
+ 4. Rename column 'CustID' to 'CustomerID': Right-click column header → Rename → type
+ 'CustomerID'.
+ 5. What happens when clicking 'Close & Apply': Applies transformations and loads data into Power
+ BI.
+ 6. Remove rows where Quantity < 2: Filter column Quantity → Number Filters → Greater Than or
+ Equal To → 2.
+ 7. Split OrderDate into Year, Month, Day: Transform → Date → Year / Month / Day → Extract.
+ 8. Replace 'Mouse' with 'Computer Mouse' in Product: Transform → Replace Values.
+ 9. Sort by OrderDate (newest first): Select OrderDate → Sort Descending.
+ 10. Handle nulls in Price column: Replace Values (null → 0) or Remove Blank Rows.
+ 11. M-code to add TotalSpent: = Table.AddColumn(PreviousStepName, "TotalSpent", each
+ [Quantity] * [Price], type number)
+ 12. Group by CustID for total spending: Home → Group By → Sum of TotalSpent.
+ 13. Fix inconsistent date formats: Change type to Date or use Locale to standardize.
+ 14. Conditional column 'High Value' if Price > 100: Add Column → Conditional Column.
+ 15. Optimize query: Remove unused columns early and filter before joins

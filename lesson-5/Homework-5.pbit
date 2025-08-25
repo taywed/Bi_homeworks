@@ -1,0 +1,101 @@
+1. What is a primary key in a table?
+
+A primary key is a column (or set of columns) that uniquely identifies each row in a table.
+
+Example: CustomerID in the Customers table.
+
+2. Name the two types of table relationships in Power BI.
+
+One-to-Many (1:*) – Most common (e.g., one customer has many sales).
+
+Many-to-Many (:) – Less common, but supported (e.g., customers may belong to multiple groups).
+
+3. How do you create a relationship between two tables in Power BI?
+
+Go to Model View → Drag a column (e.g., CustomerID) from one table to the matching column in another table.
+
+Define Cardinality (1:* or :) and Cross-filter direction (single or both).
+
+4. What is a "star schema"?
+
+A schema where a central fact table (e.g., Sales) is connected to multiple dimension tables (e.g., Customers, Products).
+
+Improves query performance and simplifies relationships.
+
+5. Which table is typically the fact table in a sales dataset?
+
+Sales = fact table (stores transactions).
+
+Products, Customers, Dates = dimension tables.
+
+6. Link Sales.csv to Customers.csv using CustomerID (one-to-many).
+
+One Customer → Many Sales.
+
+Model:
+
+Customers[CustomerID] 1 ─── * Sales[CustomerID]
+
+7. Why is ProductID in Sales.csv a foreign key?
+
+Because it refers to the ProductID in the Products table.
+
+Ensures that every sale matches a valid product.
+
+8. Fix a relationship error where ProductID has mismatched data types.
+
+Check both tables → make sure ProductID in Sales and Products are the same data type (e.g., both Integer).
+
+Fix via Power Query → Transform → Data Type.
+
+9. Explain why a star schema improves performance.
+
+Queries are simpler (fewer joins).
+
+Avoids circular relationships.
+
+Works best with columnar storage (VertiPaq in Power BI).
+
+10. Add a new column TotalSales in Sales (Quantity * Price from Products).
+
+DAX formula in Sales table:
+
+TotalSales = Sales[Quantity] * RELATED(Products[Price])
+
+11. Optimize a model with circular relationships—how would you resolve it?
+
+Break the loop by removing one relationship.
+
+Replace with a bridge table or dimension table.
+
+Ensure schema follows a star, not snowflake with loops.
+
+12. Create a role-playing dimension for OrderDate and ShipDate.
+
+Duplicate the Date table twice → one for OrderDate, one for ShipDate.
+
+Connect each to Sales with the correct date field.
+
+13. Handle a many-to-many relationship between Customers and Products.
+
+Introduce a bridge table (CustomerProduct) containing unique combinations.
+
+Then link Sales → Customers and Sales → Products through the bridge.
+
+14. Use bidirectional filtering sparingly—when is it appropriate?
+
+When you need filter propagation both ways.
+
+Example: Filtering by Product also filters Customers.
+
+Use only when necessary, since it can cause performance issues or ambiguity.
+
+15. Write DAX to enforce referential integrity if a CustomerID is deleted.
+
+You can check if a Customer exists before calculating:
+
+ValidSales = 
+CALCULATE(
+    SUM(Sales[Quantity]),
+    FILTER(Sales, NOT ISEMPTY(RELATEDTABLE(Customers)))
+)

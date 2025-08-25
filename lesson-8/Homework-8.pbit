@@ -1,0 +1,89 @@
+What does DAX stand for?
+
+DAX = Data Analysis Expressions
+It’s a formula language used in Power BI, Excel Power Pivot, and Analysis Services to create measures, calculated columns, and tables.
+
+🔹 2. Write a DAX formula to sum the Sales column
+Total Sales = SUM(Retail_Sales_Data[Sales])
+
+
+Creates a measure that sums all values from the Sales column.
+
+🔹 3. Difference between Calculated Column and Measure
+
+Calculated Column: Calculated row by row during data load. Stored in the model.
+
+Measure: Calculated on the fly, based on filters in visuals. More efficient, doesn’t store values.
+
+🔹 4. Profit Margin (Profit / Sales) using DIVIDE
+Profit Margin = DIVIDE(SUM(Retail_Sales_Data[Profit]), SUM(Retail_Sales_Data[Sales]), 0)
+
+
+ The last 0 is the alternate result if division by zero happens.
+
+🔹 5. What does COUNTROWS() do?
+
+Returns the number of rows in a table. Example:
+
+Row Count = COUNTROWS(Retail_Sales_Data)
+
+🔹 6. Total Profit = Sales - Cost
+
+If you have a Cost column:
+
+Total Profit = SUM(Retail_Sales_Data[Sales]) - SUM(Retail_Sales_Data[Cost])
+
+🔹 7. Average Sales per Product
+Avg Sales per Product = AVERAGEX(VALUES(Retail_Sales_Data[Product]), SUM(Retail_Sales_Data[Sales]))
+
+🔹 8. IF() → Tag High Profit
+Profit Category = IF(Retail_Sales_Data[Profit] > 1000, "High Profit", "Low Profit")
+
+🔹 9. What is a Circular Dependency Error?
+
+It happens when a calculated column or measure depends on itself (directly or indirectly), creating an endless loop.
+Example: If Column A is defined as = [Column B] + 1 and Column B depends on Column A.
+
+🔹 10. Row Context vs. Filter Context
+
+Row Context → Power BI evaluates formulas row by row (mainly in calculated columns).
+
+Filter Context → Filters applied by visuals, slicers, and CALCULATE. Measures are always calculated in filter context.
+
+🔹 11. YTD Sales using TOTALYTD()
+YTD Sales = TOTALYTD(SUM(Retail_Sales_Data[Sales]), Retail_Sales_Data[Date])
+
+🔹 12. Dynamic Measure (Switch between Sales, Profit, Margin)
+Selected Metric = 
+SWITCH(
+    SELECTEDVALUE(Metrics[Metric]),
+    "Sales", SUM(Retail_Sales_Data[Sales]),
+    "Profit", SUM(Retail_Sales_Data[Profit]),
+    "Margin", DIVIDE(SUM(Retail_Sales_Data[Profit]), SUM(Retail_Sales_Data[Sales]), 0)
+)
+
+
+ You’ll need a Metrics table (Sales/Profit/Margin) as a slicer.
+
+🔹 13. Optimize with Variables (VAR)
+Optimized Profit Margin =
+VAR TotalSales = SUM(Retail_Sales_Data[Sales])
+VAR TotalProfit = SUM(Retail_Sales_Data[Profit])
+RETURN DIVIDE(TotalProfit, TotalSales, 0)
+
+
+ Using VAR avoids recalculating the same expression multiple times.
+
+🔹 14. Use CALCULATE() to override a filter
+
+Example: Sales only for North region
+
+North Sales = CALCULATE(SUM(Retail_Sales_Data[Sales]), Retail_Sales_Data[Region] = "North")
+
+🔹 15. Highest Sales Amount
+Max Sales = MAX(Retail_Sales_Data[Sales])
+
+
+Or if you want the highest total sales per product:
+
+Max Sales = MAXX(VALUES(Retail_Sales_Data[Product]), SUM(Retail_Sales_Data[Sales]))

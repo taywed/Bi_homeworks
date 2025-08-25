@@ -1,0 +1,121 @@
+    1. Name three types of visuals you can create in Power BI.
+
+Bar/Column Chart – Compare categories.
+
+Line Chart – Show trends over time.
+
+Pie/Donut Chart – Show proportions.
+(Other examples: Map, Table, Card, Scatter, Funnel, KPI).
+
+2. How do you add a slicer to a report?
+
+In Report View → Insert → Slicer.
+
+Drag a field (e.g., Quarter) into the slicer.
+
+3. What is the difference between a bar chart and a column chart?
+
+Bar chart: Horizontal bars (categories on Y-axis).
+
+Column chart: Vertical bars (categories on X-axis).
+
+4. How do you change the color of a visual background?
+
+Select visual → Format (paint roller icon) → Background → Pick color & transparency.
+
+5. What does "drill-down" mean in a visual?
+
+Drill-down allows you to navigate hierarchical data (e.g., Region → Product → Quarter).
+
+Users can click into details without leaving the chart.
+
+6. Create a bar chart showing SalesAmount by Region.
+
+Steps:
+
+Insert → Bar Chart.
+
+Axis: Region, Values: SalesAmount.
+
+Result from dataset:
+
+North = 9500
+
+South = 1250
+
+East = 3200
+
+7. Add a slicer for Quarter to filter all visuals on the page.
+
+Insert → Slicer → Field: Quarter.
+
+Now all visuals update when Q1 or Q2 is selected.
+
+8. Format the bar chart to show data labels.
+
+Select chart → Format → Data Labels → On.
+
+9. Use a line chart to show SalesAmount trends over Quarter.
+
+Insert → Line Chart.
+
+Axis: Quarter, Values: SalesAmount.
+
+Result:
+
+Q1 = 6250 (5000 + 1250)
+
+Q2 = 7700 (3200 + 4500)
+
+10. Add a tooltip to display Product details when hovering over bars.
+
+Add Product to Tooltip field well.
+
+Hovering over "North" bar shows breakdown by Laptop, CPU, etc.
+
+11. Sync slicers across multiple report pages.
+
+Select slicer → View → Sync Slicers → Check pages where it should apply.
+
+12. Create a custom visual with dynamic measure selection (e.g., Sales vs. Profit).
+
+Create a disconnected table with measure names (Sales, Profit).
+
+Use a measure like:
+
+SelectedMeasure = 
+SWITCH(
+    SELECTEDVALUE(MeasureTable[Measure]),
+    "Sales", SUM(Sales_Interactive[SalesAmount]),
+    "Profit", SUM(Sales_Interactive[Profit]),
+    BLANK()
+)
+
+
+Use this measure in a chart to toggle dynamically.
+
+13. Implement a hierarchy for Region > Product > Quarter drill-down.
+
+In Model View, drag Product under Region, then Quarter under Product.
+
+Use a column chart with this hierarchy to enable drill-down.
+
+14. Use bookmarks to toggle between two visuals in the same space.
+
+Insert both visuals (e.g., bar & line chart).
+
+Create Bookmark A (bar visible, line hidden).
+
+Create Bookmark B (line visible, bar hidden).
+
+Add buttons to toggle between bookmarks.
+
+15. Optimize a slow-rendering report with 10+ visuals.
+
+Reduce number of visuals per page (use drill-through or tooltips instead).
+
+Use aggregated tables instead of detailed ones.
+
+Turn off unnecessary interactions.
+
+Optimize DAX calculations (avoid row-by-row operations).

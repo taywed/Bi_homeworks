@@ -1,0 +1,112 @@
+1. What is the difference between "Merge" and "Append" in Power Query?
+
+Merge = Combine tables horizontally (like SQL JOIN) based on a key column.
+
+Append = Stack tables vertically (like SQL UNION) to add more rows.
+
+2. How do you split a "Full Name" column into "First Name" and "Last Name"?
+
+Select the column → Split Column → By Delimiter (choose space " ").
+
+Rename resulting columns to First Name and Last Name.
+
+3. What is "Pivot Columns" used for?
+
+Converts row values into columns.
+
+Example: Transform Product names into column headers with aggregated Quantity values.
+
+4. How do you undo a step in Power Query?
+
+Go to Applied Steps pane → Click X on the unwanted step.
+
+5. What is the purpose of "Reference" vs. "Duplicate" in queries?
+
+Reference = Creates a new query linked to the original (changes propagate).
+
+Duplicate = Creates a copy that is independent from the original.
+
+6. Merge Orders.csv and Customers.xlsx on CustID (inner join).
+
+Result (Inner Join on CustID):
+
+OrderID	CustID	Product	Quantity	Name	Email
+1001	101	Laptop	1	Alice	alice@example.com
+
+1002	102	Mouse	3	Bob	bob@example.com
+
+1003	101	Keyboard	2	Alice	alice@example.com
+
+1004	103	Monitor	1	Charlie	charlie@example.com
+7. Pivot the Product column to show total Quantity per product.
+
+Result:
+
+CustID	Laptop	Mouse	Keyboard	Monitor
+101	1	0	2	0
+102	0	3	0	0
+103	0	0	0	1
+8. Append two tables with identical columns (e.g., Orders_Jan.csv + Orders_Feb.csv).
+
+Append Queries → Choose both tables.
+
+Result: One combined table with all rows stacked.
+
+9. Use "Fill Down" to replace nulls in the Email column with the previous value.
+
+Select Email → Transform → Fill → Down.
+
+Useful when only the first row in a group has the email, and others are blank.
+
+10. Extract the domain (e.g., "example.com") from the Email column.
+
+Select Email → Extract → Text After Delimiter → enter "@".
+
+Example: alice@example.com → example.com.
+
+11. Write M-code to merge queries dynamically based on a parameter (e.g., JoinType = "Inner").
+let
+    JoinType = "Inner",
+    Orders = OrdersTable,
+    Customers = CustomersTable,
+    Result = Table.NestedJoin(
+        Orders, {"CustID"},
+        Customers, {"CustID"},
+        "CustomerData",
+        if JoinType = "Inner" then JoinKind.Inner else JoinKind.LeftOuter
+    )
+in
+    Result
+
+12. Unpivot a table with columns like "Jan_Sales," "Feb_Sales" into "Month" and "Sales" format.
+
+Select columns → Unpivot Columns.
+
+Result:
+
+CustID	Month	Sales
+101	Jan_Sales	500
+101	Feb_Sales	600
+13. Handle errors in a custom column (e.g., division by zero) using try...otherwise.
+= try [Revenue] / [Quantity] otherwise null
+
+
+This prevents errors and replaces invalid results with null.
+
+14. Create a function in Power Query to clean phone numbers (e.g., remove dashes).
+let CleanPhone = (phone as text) as text =>
+    Text.Select(phone, {"0".."9"})
+in CleanPhone
+
+
+Example: "(123)-456-7890" → "1234567890".
+
+15. Optimize a query with 10+ steps—identify bottlenecks and simplify.
+
+Combine multiple column transformations into one step.
+
+Remove temporary columns not used in final output.
+
+Use Reference instead of Duplicate to avoid recalculations.
+
+Disable Load for staging queries.

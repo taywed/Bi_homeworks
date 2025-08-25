@@ -1,0 +1,30 @@
+1. List three data sources Power BI can connect to: - Excel - SQL Server Database - Web API
+ 2. First step to import data into Power BI Desktop: Go to Home → Get Data and select the data
+ source.
+ 3. How to refresh imported data: Click Home → Refresh or schedule refresh in the Power BI
+ Service.
+ 4. File formats Power BI can import directly: - CSV (.csv) - Excel (.xlsx)
+ 5. Navigator window shows: A preview of available tables or sheets and lets you select which ones
+ to load.
+ 6. Import Sales_Data.csv and load only 'Product' and 'Price' columns: Home → Get Data →
+ Text/CSV → Transform Data → remove unwanted columns → Close & Load.
+ 7. Change OrderDate to date format: In Power Query, select OrderDate → Transform → Data Type
+ → Date.
+ 8. Load vs Transform Data: - Load: imports data directly. - Transform Data: opens Power Query to
+ clean/modify before loading.
+ 9. SQL database error reason: Incorrect server name or credentials.
+ 10. Replace a data source after importing: Home → Transform Data → Data Source Settings →
+ Change Source.
+ 11. M-code to import only rows where Quantity > 1: let Source =
+ Csv.Document(File.Contents("C:\Path\Sales_Data.csv"),[Delimiter=",", Columns=5,
+ Encoding=65001, QuoteStyle=QuoteStyle.None]), PromoteHeaders =
+ Table.PromoteHeaders(Source, [PromoteAllScalars=true]), FilteredRows =
+ Table.SelectRows(PromoteHeaders, each [Quantity] > 1) in FilteredRows
+ 12. Change data source if Sales_Data.csv changed: Data Source Settings → Change Source to
+ new file location.
+ 13. Fix 'mixed data type' error: In Power Query, set consistent data type for the column (e.g., all
+ Text or all Number).
+ 14. Connect to live SQL database with parameters: In Power Query, create parameter for Year and
+ use in SQL statement: SELECT * FROM Sales WHERE YEAR(OrderDate) = @Year
+ 15. Automate data imports: Use Power Automate flow to fetch new file and refresh dataset in Power
+ BI Service
