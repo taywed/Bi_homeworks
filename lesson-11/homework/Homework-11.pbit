@@ -1,0 +1,29 @@
+CalendarPlusMinus7 =
+ADDCOLUMNS (
+    ADDCOLUMNS (
+        GENERATESERIES ( TODAY() - 7, TODAY() + 7, 1 ),
+        "Date", [Value],
+        "DayName_EN", FORMAT ( [Value], "dddd" ),
+        "DayName_UZ",
+            SWITCH (
+                WEEKDAY ( [Value], 2 ),  -- Monday = 1
+                1, "Dushanba",
+                2, "Seshanba",
+                3, "Chorshanba",
+                4, "Payshanba",
+                5, "Juma",
+                6, "Shanba",
+                7, "Yakshanba"
+            ),
+        "YearDayNumber", FORMAT ( [Value], "DDD" ),
+        "MonthName", FORMAT ( [Value], "MMMM" ),
+        "DayNumber", DAY ( [Value] ),
+        "FiscalQuarter",
+            "Q"
+                & ROUNDUP (
+                    MOD ( MONTH ( [Value] ) - 10, 12 ) / 3 + 1,
+                    0
+                )
+    ),
+    "Year", YEAR ( [Value] )
+)

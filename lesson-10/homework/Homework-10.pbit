@@ -1,0 +1,112 @@
+
+It returns a table of rows from Sales where Amount > 1000.
+
+
+
+High Sales =
+CALCULATE(
+    SUM(Sales[Amount]),
+    FILTER(Sales, Sales[Amount] > 1000)
+)
+
+
+ALL(Sales) removes all filters on the Sales table.
+
+ALLEXCEPT(Sales, Sales[Region]) removes all filters except Region, so Region context remains.
+
+
+Amount Category =
+SWITCH(
+    TRUE(),
+    Sales[Amount] > 1000, "High",
+    Sales[Amount] >= 500 && Sales[Amount] <= 1000, "Medium",
+    "Low"
+)
+
+5 What is the purpose of ALLSELECTED?
+
+It clears filters except those explicitly applied by the user selection (slicers/highlights).
+Useful when you want a measure to respect slicers but ignore row/column grouping in visuals.
+
+
+Regional Sales % =
+DIVIDE(
+    SUM(Sales[Amount]),
+    CALCULATE(
+        SUM(Sales[Amount]),
+        ALLEXCEPT(Sales, Sales[Region])
+    )
+)
+
+
+Dynamic Amount Measure =
+SWITCH(
+    SELECTEDVALUE(MetricChoice[Value]),
+    "SUM", SUM(Sales[Amount]),
+    "AVERAGE", AVERAGE(Sales[Amount]),
+    "COUNT", COUNT(Sales[Amount])
+)
+
+
+Non-Furniture Sales =
+CALCULATE(
+    SUM(Sales[Amount]),
+    FILTER(Products, Products[Category] <> "Furniture")
+)
+
+
+Because ALLSELECTED depends on how filters are applied (slicer vs row/column grouping). In pivot tables, it can give unexpected totals if the context comes from rows/columns rather than slicers.
+
+
+Total Sales (Ignore Region) =
+CALCULATE(
+    SUM(Sales[Amount]),
+    ALL(Sales[Region])
+)
+
+
+
+Original:
+
+High Sales = CALCULATE(SUM(Sales[Amount]), FILTER(Sales, Sales[Amount] > 1000))
+
+
+Optimized (replace FILTER with a Boolean expression):
+
+High Sales =
+CALCULATE(
+    SUM(Sales[Amount]),
+    Sales[Amount] > 1000
+)
+
+
+Top 2 Products Sales =
+CALCULATE(
+    SUM(Sales[Amount]),
+    KEEPFILTERS(
+        TOPN(
+            2,
+            SUMMARIZE(Sales, Sales[ProductID], "TotalSales", SUM(Sales[Amount])),
+            [TotalSales], DESC
+        )
+    )
+)
+
+
+Sales (Respect Slicers Only) =
+CALCULATE(
+    SUM(Sales[Amount]),
+    ALLSELECTED()
+)
+
+
+
+The SWITCH logic depends on SELECTEDVALUE, which returns blank when multiple values are present (e.g., in matrix rows).
+
+
+
+Sales (Reset Filters) =
+CALCULATE(
+    SUM(Sales[Amount]),
+    ALL(Sales)
+)

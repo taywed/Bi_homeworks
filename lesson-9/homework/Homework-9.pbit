@@ -1,0 +1,76 @@
+TotalPrice = Sales[Quantity] * Sales[UnitPrice]
+
+
+Total Sales = SUMX(Sales, Sales[Quantity] * Sales[UnitPrice])
+
+
+CustomerName = RELATED(Customers[Name])
+
+
+CALCULATE(SUM(Sales[Quantity]), Sales[Category] = "Electronics")
+
+
+return?
+
+It sums the Quantity column but only for rows where Category = "Electronics".
+
+
+
+VAR defines a temporary variable (value or table).
+
+RETURN specifies the expression that should be output.
+
+
+AvgPrice = 
+VAR TotalQty = SUM(Sales[Quantity])
+VAR TotalSales = SUMX(Sales, Sales[Quantity] * Sales[UnitPrice])
+RETURN
+DIVIDE(TotalSales, TotalQty)
+
+
+TotalPrice = Sales[Quantity] * Sales[UnitPrice]
+
+
+Electronics Sales = 
+CALCULATE(
+    SUMX(Sales, Sales[Quantity] * Sales[UnitPrice]),
+    Sales[Category] = "Electronics"
+)
+
+
+Total Sales (Ignore Category) =
+CALCULATE(
+    SUMX(Sales, Sales[Quantity] * Sales[UnitPrice]),
+    ALL(Sales[Category])
+)
+
+
+
+Fix: Ensure there is a relationship between Sales[CustomerID] and Customers[CustomerID]. Without a relationship, RELATED cannot pull values.
+
+
+Because CALCULATE changes the filter context by applying new filters on top of existing ones, or replacing them when specified.
+
+
+Average Unit Price = AVERAGE(Sales[UnitPrice])
+
+
+HighQty Sales Count =
+VAR HighQty = FILTER(Sales, Sales[Quantity] > 2)
+RETURN COUNTROWS(HighQty)
+
+
+% of Category Sales =
+DIVIDE(
+    SUMX(Sales, Sales[Quantity] * Sales[UnitPrice]),
+    CALCULATE(
+        SUMX(Sales, Sales[Quantity] * Sales[UnitPrice]),
+        ALLEXCEPT(Sales, Sales[Category])
+    )
+)
+
+Sales (No Filters) =
+CALCULATE(
+    SUMX(Sales, Sales[Quantity] * Sales[UnitPrice]),
+    ALL(Sales)
+)
